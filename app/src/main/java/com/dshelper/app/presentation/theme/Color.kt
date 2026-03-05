@@ -1,4 +1,4 @@
-package com.dshelper.app.ui.theme
+package com.dshelper.app.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
