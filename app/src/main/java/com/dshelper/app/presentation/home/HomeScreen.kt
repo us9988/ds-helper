@@ -1,35 +1,48 @@
 package com.dshelper.app.presentation.home
 
-import androidx.compose.foundation.BorderStroke
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dshelper.app.R
+import com.dshelper.app.presentation.common.UserViewModel
 
 @Composable
 fun HomeScreen(
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
 ) {
+    val activity = LocalActivity.current as ViewModelStoreOwner
+    val userViewModel: UserViewModel = hiltViewModel(viewModelStoreOwner = activity)
+    val isLoggedIn by userViewModel.isLoggedIn.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
-            LogoHeader(onLoginClick = onLoginClick)
+            LogoHeader(
+                isLoggedIn = isLoggedIn,
+                onLoginClick = onLoginClick,
+                onNotificationClick = { }
+            )
         }
     ) { paddingValues ->
         Box(
@@ -44,7 +57,9 @@ fun HomeScreen(
 
 @Composable
 fun LogoHeader(
-    onLoginClick: () -> Unit
+    isLoggedIn: Boolean,
+    onLoginClick: () -> Unit,
+    onNotificationClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -61,18 +76,18 @@ fun LogoHeader(
             modifier = Modifier.height(28.dp)
         )
 
-        // 오른쪽 — 로그인 버튼
-        OutlinedButton(
-            onClick = onLoginClick,
-            shape = RoundedCornerShape(8.dp),
-            border = BorderStroke(1.dp, Color.Black),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
-        ) {
-            Text(
-                text = "로그인",
-                color = Color.Black,
-                fontSize = 14.sp
-            )
+        if (isLoggedIn) {
+            IconButton(onClick = onNotificationClick) {
+                Icon(
+                    imageVector = Icons.Default.Notifications,
+                    contentDescription = "알림",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        } else {
+            OutlinedButton(onClick = onLoginClick) {
+                Text("로그인")
+            }
         }
     }
 }

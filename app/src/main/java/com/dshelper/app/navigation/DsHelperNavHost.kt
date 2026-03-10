@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dshelper.app.presentation.activity.ActivityScreen
+import com.dshelper.app.presentation.auth.login.LoginScreen
 import com.dshelper.app.presentation.community.CommunityScreen
 import com.dshelper.app.presentation.home.HomeScreen
 import com.dshelper.app.presentation.profile.ProfileScreen
@@ -73,11 +74,13 @@ fun DsHelperNavHost() {
             composable(Screen.Profile.route) { ProfileScreen() }
 
             // 로그인은 홈에서 push — 하단 탭 숨김
-//            composable(Screen.Login.route) {
-//                LoginScreen(
-//                    onBackClick = { navController.popBackStack() }
-//                )
-//            }
+            composable(Screen.Login.route) {
+                LoginScreen(
+                    onBackClick = {
+                        navController.popBackStack()  // 로그인 화면 제거
+                    }
+                )
+            }
         }
     }
 }
