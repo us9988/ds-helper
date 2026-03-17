@@ -1,6 +1,7 @@
 package com.dshelper.app.presentation.auth.login
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +36,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.dshelper.app.R
 import com.dshelper.app.domain.model.LoginType
 import com.dshelper.app.presentation.common.CommonTopBar
@@ -50,9 +53,9 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        viewModel.sideEffect.collect { effect ->
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle).collect { effect ->
             when (effect) {
                 is LoginSideEffect.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(effect.message)
@@ -65,18 +68,32 @@ fun LoginScreen(
                         LoginType.KAKAO -> {
                             val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
                                 when {
-                                    error != null -> viewModel.onEvent(
-                                        LoginEvent.OnSocialLoginFailure(LoginType.KAKAO, error)
-                                    )
-                                    token != null -> viewModel.onEvent(
-                                        LoginEvent.OnSocialLoginSuccess(LoginType.KAKAO, token.accessToken)
-                                    )
+                                    error != null -> {
+                                        Log.e("LOGIN", "카카오 SDK 에러: ${error.message}")
+                                        viewModel.onEvent(
+                                            LoginEvent.OnSocialLoginFailure(LoginType.KAKAO, error)
+                                        )
+                                    }
+                                    token != null -> {
+                                        Log.d("LOGIN", "카카오 SDK 성공: ${token.accessToken}")
+                                        viewModel.onEvent(
+                                            LoginEvent.OnSocialLoginSuccess(LoginType.KAKAO, token.accessToken)
+                                        )
+                                    }
+                                    else -> {
+                                        Log.e("LOGIN", "token, error 둘 다 null")
+
+                                    }
                                 }
                             }
                             if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+                                Log.d("LOGIN", "카카오톡으로 로그인 시도")
                                 UserApiClient.instance.loginWithKakaoTalk(context as Activity, callback = callback)
                             } else {
+                                Log.d("LOGIN", "카카오 계정으로 로그인 시도")
+                                Log.d("LOGIN", "context: ${context.javaClass.simpleName}")
                                 UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+                                Log.d("LOGIN", "loginWithKakaoAccount 호출 완료")
                             }
 
                         }
@@ -96,6 +113,7 @@ fun LoginScreen(
         topBar = {
             CommonTopBar(
                 title = "로그인",
+                showBackButton = true,
                 onBackClick = onBackClick
             )
         }

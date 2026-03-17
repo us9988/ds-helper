@@ -1,5 +1,6 @@
 package com.dshelper.app.presentation.auth.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dshelper.app.data.local.TokenDataStore
@@ -33,7 +34,10 @@ class LoginViewModel @Inject constructor(
                     _sideEffect.emit(LoginSideEffect.RequestSocialLogin(event.type))
                 }
             }
-            is LoginEvent.OnSocialLoginSuccess -> login(event.type, event.accessToken)
+            is LoginEvent.OnSocialLoginSuccess -> {
+                Log.d("LOGIN", "OnSocialLoginSuccess 받음: type=${event.type}, token=${event.accessToken}")
+                login(event.type, event.accessToken)
+            }
             is LoginEvent.OnSocialLoginFailure -> {
                 viewModelScope.launch {
                     _sideEffect.emit(
@@ -58,12 +62,15 @@ class LoginViewModel @Inject constructor(
 
     private fun login(type: LoginType, accessToken: String) {
         viewModelScope.launch {
+            Log.d("LOGIN", "login() 호출됨")
             _uiState.update { it.copy(isLoading = true) }
             loginUseCase(type, accessToken)
                 .onSuccess {
+                    Log.d("LOGIN", "로그인 성공 → NavigateToHome emit")
                     _sideEffect.emit(LoginSideEffect.NavigateToHome)
                 }
                 .onFailure { error ->
+                    Log.e("LOGIN", "로그인 실패: ${error.message}")
                     _sideEffect.emit(LoginSideEffect.ShowSnackbar(error.message ?: "로그인 실패"))
                 }
             _uiState.update { it.copy(isLoading = false) }

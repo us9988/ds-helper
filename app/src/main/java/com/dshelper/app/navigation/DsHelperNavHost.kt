@@ -1,5 +1,6 @@
 package com.dshelper.app.navigation
 
+import PostScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -9,14 +10,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.dshelper.app.presentation.activity.ActivityScreen
+import androidx.navigation.navArgument
 import com.dshelper.app.presentation.auth.login.LoginScreen
 import com.dshelper.app.presentation.community.CommunityScreen
 import com.dshelper.app.presentation.home.HomeScreen
+import com.dshelper.app.presentation.post.detail.PostDetailScreen
 import com.dshelper.app.presentation.profile.ProfileScreen
 
 @Composable
@@ -69,7 +72,13 @@ fun DsHelperNavHost() {
                     }
                 )
             }
-            composable(Screen.Activity.route) { ActivityScreen() }
+            composable(Screen.Post.route) {
+                PostScreen(
+                    onPostClick = { postId ->
+                        navController.navigate(Screen.PostDetail.createRoute(postId))
+                    }
+                )
+            }
             composable(Screen.Community.route) { CommunityScreen() }
             composable(Screen.Profile.route) { ProfileScreen() }
 
@@ -79,6 +88,16 @@ fun DsHelperNavHost() {
                     onBackClick = {
                         navController.popBackStack()  // 로그인 화면 제거
                     }
+                )
+            }
+            composable(
+                route = Screen.PostDetail.route,
+                arguments = listOf(navArgument("postId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val postId = backStackEntry.arguments?.getString("postId") ?: return@composable
+                PostDetailScreen(
+                    postId = postId,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }

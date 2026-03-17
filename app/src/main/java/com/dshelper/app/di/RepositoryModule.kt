@@ -1,7 +1,9 @@
 package com.dshelper.app.di
 
 import com.dshelper.app.data.repository.AuthRepositoryImpl
+import com.dshelper.app.data.repository.PostRepositoryImpl
 import com.dshelper.app.domain.repository.AuthRepository
+import com.dshelper.app.domain.repository.PostRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,4 +19,11 @@ abstract class RepositoryModule {
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPostRepository(
+        postRepositoryImpl: PostRepositoryImpl
+    ): PostRepository
+    
 }

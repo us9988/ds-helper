@@ -3,7 +3,7 @@ package com.dshelper.app.presentation.home
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +26,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dshelper.app.R
+import com.dshelper.app.presentation.common.DSHelperButton
 import com.dshelper.app.presentation.common.UserViewModel
 
 @Composable
@@ -36,21 +36,36 @@ fun HomeScreen(
     val activity = LocalActivity.current as ViewModelStoreOwner
     val userViewModel: UserViewModel = hiltViewModel(viewModelStoreOwner = activity)
     val isLoggedIn by userViewModel.isLoggedIn.collectAsStateWithLifecycle()
-    Scaffold(
-        topBar = {
-            LogoHeader(
-                isLoggedIn = isLoggedIn,
-                onLoginClick = onLoginClick,
-                onNotificationClick = { }
-            )
-        }
-    ) { paddingValues ->
-        Box(
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        LogoHeader(
+            isLoggedIn = isLoggedIn,
+            onLoginClick = onLoginClick,
+            onNotificationClick = { userViewModel.logout() }
+        )
+
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // 홈 컨텐츠 — 나중에 채울 것
+            DSHelperButton(
+                text = "도움 요청하기",
+                onClick = { },
+                filled = true
+            )
+            DSHelperButton(
+                text = "쓰레기통 찾기",
+                onClick = { },
+                filled = false
+            )
+            DSHelperButton(
+                text = "복지혜택",
+                onClick = { },
+                filled = false
+            )
         }
     }
 }

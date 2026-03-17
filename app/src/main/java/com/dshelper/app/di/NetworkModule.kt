@@ -2,6 +2,7 @@ package com.dshelper.app.di
 
 import com.dshelper.app.BuildConfig
 import com.dshelper.app.data.api.AuthApi
+import com.dshelper.app.data.api.PostApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,5 +44,11 @@ object NetworkModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostApi(retrofit: Retrofit): PostApi {
+        return retrofit.create(PostApi::class.java)
     }
 }

@@ -12,7 +12,7 @@ data class BottomNavItem(
 
 val bottomNavItems = listOf(
     BottomNavItem(Screen.Home, "홈", Icons.Default.Home),
-    BottomNavItem(Screen.Activity, "활동", Icons.Default.Favorite),
+    BottomNavItem(Screen.Post, "활동", Icons.Default.Favorite),
     BottomNavItem(Screen.Community, "소통", Icons.Default.Forum),
     BottomNavItem(Screen.Profile, "프로필", Icons.Default.Person)
 )

@@ -1,5 +1,6 @@
 package com.dshelper.app.presentation.common
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dshelper.app.data.local.TokenDataStore
@@ -20,7 +21,9 @@ class UserViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             tokenDataStore.accessToken.collect { token ->
+                Log.d("LOGIN", "UserViewModel token 감지: $token")
                 _isLoggedIn.value = !token.isNullOrEmpty()
+                Log.d("LOGIN", "isLoggedIn: ${_isLoggedIn.value}")
             }
         }
     }

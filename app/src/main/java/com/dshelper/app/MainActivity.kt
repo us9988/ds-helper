@@ -1,6 +1,8 @@
 package com.dshelper.app
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,10 +23,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            Log.d("KAKAO", "scheme: kakao${BuildConfig.KAKAO_APP_KEY}")
             DsHelperTheme {
                 DsHelperNavHost()
             }
         }
+    }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        Log.d("KAKAO", "onNewIntent: ${intent.data}")
     }
 }
 

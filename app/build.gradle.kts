@@ -95,4 +95,6 @@ dependencies {
     implementation(libs.kakao.user)
     // DataStore
     implementation(libs.datastore.preferences)
+    // coil
+    implementation(libs.coil)
 }

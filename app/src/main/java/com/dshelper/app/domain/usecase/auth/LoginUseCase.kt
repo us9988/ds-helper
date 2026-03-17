@@ -3,7 +3,7 @@ package com.dshelper.app.domain.usecase.auth
 import com.dshelper.app.domain.model.LoginType
 import com.dshelper.app.domain.model.User
 import com.dshelper.app.domain.repository.AuthRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(
     private val authRepository: AuthRepository

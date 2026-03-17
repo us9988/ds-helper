@@ -1,6 +1,7 @@
 package com.dshelper.app.data.local
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -21,9 +22,11 @@ class TokenDataStore @Inject constructor(
     }
 
     suspend fun saveToken(accessToken: String) {
+        Log.d("LOGIN", "saveToken 호출됨: $accessToken")
         context.dataStore.edit { prefs ->
             prefs[ACCESS_TOKEN] = accessToken
         }
+        Log.d("LOGIN", "saveToken 완료")
     }
 
     val accessToken: Flow<String?> = context.dataStore.data
