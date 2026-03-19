@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -32,7 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -42,13 +43,15 @@ import androidx.lifecycle.flowWithLifecycle
 import com.dshelper.app.R
 import com.dshelper.app.domain.model.LoginType
 import com.dshelper.app.presentation.common.CommonTopBar
+import com.dshelper.app.presentation.common.UserViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -131,6 +134,7 @@ fun LoginScreen(
                 backgroundColor = Color(0xFFFEE500),
                 textColor = Color.Black,
                 iconPainter = painterResource(id = R.drawable.ic_kakao),
+                iconSize = 24.dp,
                 onClick = { viewModel.onEvent(LoginEvent.OnSocialLoginClick(LoginType.KAKAO)) }
             )
 
@@ -152,6 +156,7 @@ fun LoginScreen(
                 textColor = Color.Black,
                 borderColor = Color.LightGray,
                 iconPainter = painterResource(id = R.drawable.ic_google),
+                iconSize = 28.dp,
                 onClick = { viewModel.onEvent(LoginEvent.OnSocialLoginClick(LoginType.GOOGLE)) }
             )
 
@@ -162,6 +167,7 @@ fun LoginScreen(
                 backgroundColor = Color(0xFFFF8645),
                 textColor = Color.White,
                 iconPainter = painterResource(id = R.drawable.ic_institution),
+                iconSize = 24.dp,
                 onClick = { viewModel.onEvent(LoginEvent.OnOrganizationLoginClick) }
             )
         }
@@ -180,13 +186,14 @@ fun SocialLoginButton(
     textColor: Color,
     borderColor: Color? = null,
     iconPainter: Painter? = null,
+    iconSize: Dp = 20.dp,
     onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(52.dp),
+            .height(56.dp),
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = backgroundColor
@@ -201,15 +208,16 @@ fun SocialLoginButton(
                 Image(
                     painter = it,
                     contentDescription = null,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(iconSize)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
             }
             Text(
                 text = text,
                 color = textColor,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontSize = 18.sp
+                ),
             )
         }
     }

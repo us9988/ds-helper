@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">DsHelper</string>
+    <string name="request_help">도움 요청하기</string>
+    <string name="find_trashcan">쓰레기통 찾기</string>
+    <string name="benefits">복지 혜택</string>
+
+    <string name="login">로그인</string>
+
+    <string name="content_description_logo">로고</string>
+    <string name="content_description_notification">알림</string>
+    <string name="content_description_back">뒤로가기</string>
 </resources>

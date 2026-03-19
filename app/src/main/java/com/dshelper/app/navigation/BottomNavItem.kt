@@ -1,18 +1,16 @@
 package com.dshelper.app.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.graphics.vector.ImageVector
+import com.dshelper.app.R
 
 data class BottomNavItem(
     val screen: Screen,
     val label: String,
-    val icon: ImageVector
+    val drawableRes: Int
 )
 
 val bottomNavItems = listOf(
-    BottomNavItem(Screen.Home, "홈", Icons.Default.Home),
-    BottomNavItem(Screen.Post, "활동", Icons.Default.Favorite),
-    BottomNavItem(Screen.Community, "소통", Icons.Default.Forum),
-    BottomNavItem(Screen.Profile, "프로필", Icons.Default.Person)
+    BottomNavItem(Screen.Home, "홈", R.drawable.ic_home),
+    BottomNavItem(Screen.Post, "활동", R.drawable.ic_post),
+    BottomNavItem(Screen.Community, "소통", R.drawable.ic_community),
+    BottomNavItem(Screen.Profile, "마이", R.drawable.ic_profile)
 )
