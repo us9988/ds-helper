@@ -20,7 +20,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,12 +36,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.flowWithLifecycle
 import com.dshelper.app.R
 import com.dshelper.app.domain.model.LoginType
-import com.dshelper.app.presentation.common.CommonTopBar
+import com.dshelper.app.presentation.common.DsTopBar
+import com.dshelper.app.presentation.common.DsSnackbarHost
 import com.dshelper.app.presentation.common.UserViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
@@ -51,14 +49,19 @@ import com.kakao.sdk.user.UserApiClient
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isLoggedIn by userViewModel.isLoggedIn.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(lifecycleOwner) {
-        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle).collect { effect ->
+
+    LaunchedEffect(isLoggedIn) {
+        if (isLoggedIn) onBackClick()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.collect { effect ->
             when (effect) {
                 is LoginSideEffect.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(effect.message)
@@ -112,9 +115,9 @@ fun LoginScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { DsSnackbarHost(snackbarHostState) },
         topBar = {
-            CommonTopBar(
+            DsTopBar(
                 title = "로그인",
                 showBackButton = true,
                 onBackClick = onBackClick

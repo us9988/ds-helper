@@ -33,9 +33,29 @@ val Red50 = Color(0xFFF14253)
 val Red60 = Color(0xFFD73646)
 
 val TextPrimary = Gray80
-val BorderDefault = Gray30
+val TextSecondary = Gray60
+val TextTertiary = Gray40
+val TextPlaceholder = Gray40
+val TextDisabled = Gray40
+val TextInverse = White
+val TextBrand = Primary50
+val TextDanger = Red50
 
+val BgPage = White
 val BgBrand = Primary50
+val BgBrandSoft = Primary10
+val BgDangerSoft = Red10
+val BgNeutralStrong = Gray40
+val BgNeutralSoft = Gray20
+val BgEnabled = Gray80
+val BgDisabled = Gray20
+
+val BorderDefault = Gray30
+val BorderSubtitle = Gray20
+val BorderFocus = Gray80
+val BorderDanger = Red50
 
 val IconPrimary = Gray80
+val IconSecondary = Gray60
+val IconTertiary = Gray40
 val IconDisabled = Gray30

@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +36,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.dshelper.app.R
-import com.dshelper.app.presentation.common.CommonTopBar
+import com.dshelper.app.presentation.common.DsTopBar
+import com.dshelper.app.presentation.common.DsSnackbarHost
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -60,9 +60,9 @@ fun PostDetailScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { DsSnackbarHost(snackbarHostState) },
         topBar = {
-            CommonTopBar(
+            DsTopBar(
                 title = "활동",                  // ✅ 활동으로 변경
                 showBackButton = true,
                 onBackClick = { viewModel.onEvent(PostDetailEvent.OnBackClick) }

@@ -1,7 +1,6 @@
 package com.dshelper.app.data.local
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -19,18 +18,21 @@ class TokenDataStore @Inject constructor(
 
     companion object {
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
+        val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
     }
 
-    suspend fun saveToken(accessToken: String) {
-        Log.d("LOGIN", "saveToken 호출됨: $accessToken")
+    suspend fun saveTokens(accessToken: String, refreshToken: String) {
         context.dataStore.edit { prefs ->
             prefs[ACCESS_TOKEN] = accessToken
+            prefs[REFRESH_TOKEN] = refreshToken
         }
-        Log.d("LOGIN", "saveToken 완료")
     }
 
     val accessToken: Flow<String?> = context.dataStore.data
         .map { it[ACCESS_TOKEN] }
+
+    val refreshToken: Flow<String?> = context.dataStore.data
+        .map { it[REFRESH_TOKEN] }
 
     suspend fun clearTokens() {
         context.dataStore.edit { it.clear() }

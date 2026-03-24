@@ -31,7 +31,10 @@ class AuthRepositoryImpl @Inject constructor(
                 throw Exception(response.message)
             }
             Log.d("AUTH", "9. 토큰 저장 시작")
-            tokenDataStore.saveToken(response.data)
+            tokenDataStore.saveTokens(
+                accessToken = response.data.accessToken,
+                refreshToken = response.data.refreshToken
+            )
             User(id = "", name = "", email = "", loginType = LoginType.KAKAO)
         }.also { result ->
             result.onFailure {
@@ -52,7 +55,10 @@ class AuthRepositoryImpl @Inject constructor(
             if (!response.success || response.data == null) {
                 throw Exception(response.message)
             }
-            tokenDataStore.saveToken(response.data)
+            tokenDataStore.saveTokens(
+                accessToken = response.data.accessToken,
+                refreshToken = response.data.refreshToken
+            )
             User(id = "", name = "", email = "", loginType = LoginType.KAKAO)
         }
     }
@@ -63,7 +69,10 @@ class AuthRepositoryImpl @Inject constructor(
             if (!response.success || response.data == null) {
                 throw Exception(response.message)
             }
-            tokenDataStore.saveToken(response.data)
+            tokenDataStore.saveTokens(
+                accessToken = response.data.accessToken,
+                refreshToken = response.data.refreshToken
+            )
             User(id = "", name = "", email = "", loginType = LoginType.KAKAO)
         }
     }

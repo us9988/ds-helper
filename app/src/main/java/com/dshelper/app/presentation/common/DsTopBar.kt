@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.dshelper.app.R
 
 @Composable
-fun CommonTopBar(
+fun DsTopBar(
     title: String,
     showBackButton: Boolean = false,
     onBackClick: () -> Unit = {}

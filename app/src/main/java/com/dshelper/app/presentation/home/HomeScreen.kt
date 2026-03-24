@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
@@ -28,7 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dshelper.app.R
-import com.dshelper.app.presentation.common.DSButton
+import com.dshelper.app.presentation.common.DsButton
 import com.dshelper.app.presentation.theme.BorderDefault
 import com.dshelper.app.presentation.theme.Gray20
 import com.dshelper.app.presentation.theme.TextPrimary
@@ -54,17 +53,17 @@ fun HomeScreen(
                 .padding(horizontal = 16.dp, vertical = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            DSButton(
+            DsButton(
                 text = stringResource(R.string.request_help),
                 onClick = onRequestHelpClick,
                 filled = true
             )
-            DSButton(
+            DsButton(
                 text = stringResource(R.string.find_trashcan),
                 onClick = { },
                 filled = false
             )
-            DSButton(
+            DsButton(
                 text = stringResource(R.string.benefits),
                 onClick = { },
                 filled = false

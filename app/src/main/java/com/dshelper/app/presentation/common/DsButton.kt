@@ -12,14 +12,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dshelper.app.presentation.theme.BgBrand
+import com.dshelper.app.presentation.theme.BgDisabled
+import com.dshelper.app.presentation.theme.TextDisabled
+import com.dshelper.app.presentation.theme.TextInverse
 import com.dshelper.app.presentation.theme.TextPrimary
 import com.dshelper.app.presentation.theme.White
 
 @Composable
-fun DSButton(
+fun DsButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -44,9 +48,9 @@ fun DSButton(
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (filled) BgBrand else White,
-            contentColor = if (filled) White else TextPrimary,
-            disabledContainerColor = if (filled) Color(0xFF00C853).copy(alpha = 0.4f) else Color.White.copy(alpha = 0.4f),
-            disabledContentColor = if (filled) Color.White.copy(alpha = 0.4f) else Color.Black.copy(alpha = 0.4f)
+            contentColor = if (filled) TextInverse else TextPrimary,
+            disabledContainerColor = if (filled) BgDisabled else Color.White.copy(alpha = 0.4f),
+            disabledContentColor = if (filled) TextDisabled else Color.Black.copy(alpha = 0.4f)
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,
@@ -56,7 +60,7 @@ fun DSButton(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
             modifier = Modifier.fillMaxWidth().height(19.dp),
             textAlign = textAlign
         )

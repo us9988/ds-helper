@@ -52,7 +52,7 @@ class LoginViewModel @Inject constructor(
                 viewModelScope.launch {
                     _uiState.update { it.copy(isLoading = true) }
                     // 테스트용 임시 로그인
-                    tokenDataStore.saveToken("test_token")
+                    tokenDataStore.saveTokens("test_token","test_token")
                     _sideEffect.emit(LoginSideEffect.NavigateToHome)
                     _uiState.update { it.copy(isLoading = false) }
                 }

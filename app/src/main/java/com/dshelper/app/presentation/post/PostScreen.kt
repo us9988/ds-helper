@@ -24,7 +24,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,7 +43,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.dshelper.app.domain.model.Post
-import com.dshelper.app.presentation.common.CommonTopBar
+import com.dshelper.app.presentation.common.DsTopBar
+import com.dshelper.app.presentation.common.DsSnackbarHost
 import com.dshelper.app.presentation.post.PostViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 
@@ -84,9 +84,9 @@ fun PostScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { DsSnackbarHost(snackbarHostState) },
         topBar = {
-            CommonTopBar(
+            DsTopBar(
                 title = "활동"
             )
         }) { paddingValues ->
