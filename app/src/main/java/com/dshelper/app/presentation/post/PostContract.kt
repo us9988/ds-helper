@@ -7,7 +7,15 @@ data class PostUiState(
     val isLoading: Boolean = false,
     val hasNext: Boolean = false,
     val currentPage: Int = 0
-)
+){
+    val filteredPosts: List<Post>
+        get() = if (searchQuery.isBlank()) posts
+        else posts.filter {
+            it.title.contains(searchQuery, ignoreCase = true) ||
+                    it.content.contains(searchQuery, ignoreCase = true) ||
+                    it.writerName.contains(searchQuery, ignoreCase = true)
+        }
+}
 
 enum class PostSort(val label: String, val sort: String, val sortBy: String) {
     LATEST("최신순", "desc", "createdAt"),

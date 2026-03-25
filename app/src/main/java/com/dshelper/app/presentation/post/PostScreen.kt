@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -36,16 +37,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.dshelper.app.domain.model.Post
-import com.dshelper.app.presentation.common.DsTopBar
 import com.dshelper.app.presentation.common.DsSnackbarHost
+import com.dshelper.app.presentation.common.DsTopBar
 import com.dshelper.app.presentation.post.PostViewModel
+import com.dshelper.app.presentation.theme.BgEnabled
+import com.dshelper.app.presentation.theme.BorderDefault
+import com.dshelper.app.presentation.theme.Gray50
+import com.dshelper.app.presentation.theme.TextInverse
+import com.dshelper.app.presentation.theme.TextTertiary
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
@@ -84,6 +89,7 @@ fun PostScreen(
     }
 
     Scaffold(
+        containerColor = Color.White,
         snackbarHost = { DsSnackbarHost(snackbarHostState) },
         topBar = {
             DsTopBar(
@@ -116,11 +122,30 @@ fun PostScreen(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(uiState.posts, key = { post -> "post_${post.id}" }) { post ->
-                        PostItem(
-                            post = post,
-                            onClick = { viewModel.onEvent(PostEvent.OnPostClick(post.id)) }
-                        )
+                    if (uiState.filteredPosts.isEmpty() && !uiState.isLoading) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(48.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = if (uiState.searchQuery.isBlank()) "게시글이 없어요."
+                                    else "'${uiState.searchQuery}' 검색 결과가 없어요.",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = Color(0xFFAAAAAA)
+                                    )
+                                )
+                            }
+                        }
+                    }else{
+                        items(uiState.filteredPosts, key = { post -> "post_${post.id}" }) { post ->
+                            PostItem(
+                                post = post,
+                                onClick = { viewModel.onEvent(PostEvent.OnPostClick(post.id)) }
+                            )
+                        }
                     }
                     if (uiState.isLoading) {
                         item {
@@ -163,19 +188,30 @@ private fun PostSearchBar(
                     if (query.isEmpty()) {
                         Text(
                             text = "게시물의 제목을 입력해보세요",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color(0xFFAAAAAA)
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Gray50
                         )
                     }
                     innerTextField()
                 }
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "검색",
-                tint = Color(0xFFAAAAAA)
-            )
+            if (query.isNotEmpty()) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "검색어 지우기",
+                    tint = Color(0xFFAAAAAA),
+                    modifier = Modifier
+                        .size(18.dp)
+                        .clickable { onQueryChange("") }
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "검색",
+                    tint = Color(0xFFAAAAAA)
+                )
+            }
         }
     }
 }
@@ -197,10 +233,10 @@ private fun PostSortButtons(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp))
-                    .background(if (isSelected) Color.Black else Color.White)
+                    .background(if (isSelected) BgEnabled else Color.Transparent)
                     .border(
                         width = 1.dp,
-                        color = Color(0xFFAAAAAA),
+                        color = BorderDefault,
                         shape = RoundedCornerShape(20.dp)
                     )
                     .clickable { onSortChange(sort) }
@@ -209,8 +245,7 @@ private fun PostSortButtons(
                 Text(
                     text = sort.label,
                     style = MaterialTheme.typography.bodySmall.copy(
-                        fontWeight = FontWeight.Medium,
-                        color = if (isSelected) Color.White else Color(0xFFAAAAAA)
+                        color = if (isSelected) TextInverse else TextTertiary
                     )
                 )
             }
@@ -228,16 +263,14 @@ private fun PostItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .background(Color.White, RoundedCornerShape(8.dp))
+            .background(Color.Transparent)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = post.title,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.SemiBold
-                ),
+                style = MaterialTheme.typography.titleSmall,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -249,12 +282,12 @@ private fun PostItem(
                 Text(
                     text = post.createdAt,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFFAAAAAA)
+                    color = TextTertiary
                 )
                 Text(
                     text = "조회 ${post.viewCount}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFFAAAAAA)
+                    color = TextTertiary
                 )
             }
         }
@@ -265,8 +298,9 @@ private fun PostItem(
             model = post.imageUrl,
             contentDescription = post.title,
             modifier = Modifier
-                .size(80.dp)
-                .clip(RoundedCornerShape(8.dp)),
+                .width(100.dp)
+                .height(75.dp)
+                .clip(RoundedCornerShape(4.dp)),
             contentScale = ContentScale.Crop
         )
     }
