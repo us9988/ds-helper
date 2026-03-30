@@ -91,9 +91,8 @@ BASE_URL=https://your_server_url/
 
 ### 요구사항
 ```
-Android Studio Hedgehog 이상
-minSdk 26
-targetSdk 35
+minSdk 28
+targetSdk 36
 Kotlin 2.1.21
 ```
 
@@ -103,17 +102,3 @@ Kotlin 2.1.21
 | Android | 1명 |
 | Backend | 1명 |
 | Design | 1명 |
-
-## 📄 License
-```
-Copyright 2026 DSHelper Team
-```
-```
-
----
-
-### 다음 할 것
-```
-1. 스크린샷 찍어서 표에 넣기
-2. GitHub에 복붙
-3. 실제 링크로 교체
