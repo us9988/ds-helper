@@ -8,12 +8,16 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ReservationApi {
+
+    /**
+     * @param date "YYYY-mm-dd"
+     */
     @GET("reservations/pre-reserved")
     suspend fun getPreReservedTimes(
-        @Query("date") date: String  // 예: "2026-03-22"
+        @Query("date") date: String
     ): List<String>
 
-    @POST("personal-reservations")  // ✅ 추가
+    @POST("personal-reservations")
     suspend fun postPersonalReservation(
         @Body request: PersonalReservationRequest
     ): ReservationResponse

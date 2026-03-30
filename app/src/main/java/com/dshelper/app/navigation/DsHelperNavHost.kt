@@ -41,8 +41,10 @@ import com.dshelper.app.presentation.help.HelpCompleteScreen
 import com.dshelper.app.presentation.help.HelpFormScreen
 import com.dshelper.app.presentation.help.HelpNoticeScreen
 import com.dshelper.app.presentation.home.HomeScreen
+import com.dshelper.app.presentation.mypage.EditNameScreen
+import com.dshelper.app.presentation.mypage.MyPageScreen
+import com.dshelper.app.presentation.mypage.ProfileScreen
 import com.dshelper.app.presentation.post.detail.PostDetailScreen
-import com.dshelper.app.presentation.profile.ProfileScreen
 import com.dshelper.app.presentation.theme.Gray20
 import com.dshelper.app.presentation.theme.IconDisabled
 import com.dshelper.app.presentation.theme.IconPrimary
@@ -60,7 +62,9 @@ fun DsHelperNavHost() {
     val hideBottomBarRoutes = listOf(
         Screen.HelpForm.route,
         Screen.HelpComplete.route,
-        Screen.PostDetail.route
+        Screen.PostDetail.route,
+        Screen.Profile.route,
+        Screen.EditName.route
     )
 
     val showBottomBar = currentRoute !in hideBottomBarRoutes
@@ -160,7 +164,26 @@ fun DsHelperNavHost() {
                     )
                 }
                 composable(Screen.Community.route) { CommunityScreen() }
-                composable(Screen.Profile.route) { ProfileScreen() }
+                composable(Screen.MyPage.route) {
+                    MyPageScreen(
+                        isLoggedIn = isLoggedIn,
+                        onLogoutClick = { userViewModel.logout() },
+                        onProfileClick = { navController.navigate(Screen.Profile.route) },
+                        onLoginClick = { navController.navigate(Screen.Login.route) }
+                    )
+                }
+                composable(Screen.Profile.route) {
+                    ProfileScreen(
+                        onClickEditName = { navController.navigate(Screen.EditName.route) },
+                        onNavigateBack = { navController.popBackStack() }
+                    )
+                }
+                composable(Screen.EditName.route) {
+                    EditNameScreen(
+                        currentName = "",  // 추후 실제 이름 전달
+                        onNavigateBack = { navController.popBackStack() }
+                    )
+                }
 
                 // 로그인은 홈에서 push — 하단 탭 숨김
                 composable(Screen.Login.route) {
@@ -222,6 +245,7 @@ fun DsHelperNavHost() {
                     )
                 }
 
+
             }
 
         }
@@ -236,7 +260,6 @@ fun NavGraphBuilder.authComposable(
     content: @Composable () -> Unit
 ) {
     composable(route) {
-        Log.e("LOGIN", "isLoggedIn: $isLoggedIn")
         if (isLoggedIn) {
             content()
         } else {

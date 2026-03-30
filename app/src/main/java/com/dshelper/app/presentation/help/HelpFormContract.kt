@@ -1,6 +1,7 @@
 package com.dshelper.app.presentation.help
 
 import java.time.LocalDate
+import java.util.Locale
 
 data class HelpFormUiState(
     val isLoading: Boolean = false,
@@ -8,8 +9,8 @@ data class HelpFormUiState(
     val selectedYear: Int = LocalDate.now().year,
     val selectedMonth: Int = LocalDate.now().monthValue,
     val selectedDay: Int? = null,
-    val startTime: String? = null,   // selectedTime 제거 → startTime ✅
-    val endTime: String? = null,     // endTime 추가 ✅
+    val startTime: String? = null,
+    val endTime: String? = null,
     val reservedTimes: List<String> = emptyList(),
     val isTimesLoading: Boolean = false,
     val name: String = "",
@@ -26,26 +27,28 @@ data class HelpFormUiState(
         get() {
             val start = startTime ?: return null
             val startMinutes = timeToMinutes(start)
-            val maxMinutes = startMinutes + 180  // 3시간
+            val maxMinutes = startMinutes + 180
             val maxHour = maxMinutes / 60
             val maxMinute = maxMinutes % 60
-            return String.format("%02d:%02d", maxHour, maxMinute)
+            return String.format(Locale.KOREAN, "%02d:%02d", maxHour, maxMinute)
         }
 
     private fun timeToMinutes(time: String): Int {
         val (hour, minute) = time.split(":").map { it.toInt() }
         return hour * 60 + minute
     }
-    val isAllFilled: Boolean get() =
-        selectedDay != null &&
-                startTime != null &&          // selectedTime → startTime ✅
-                endTime != null &&            // endTime 추가 ✅
-                name.isNotBlank() &&
-                phone.isNotBlank() &&
-                address.isNotBlank() &&
-                detailAddress.isNotBlank() &&
-                gender.isNotBlank()&&
-                helpContent.isNotBlank()
+
+    val isAllFilled: Boolean
+        get() =
+            selectedDay != null &&
+                    startTime != null &&
+                    endTime != null &&
+                    name.isNotBlank() &&
+                    phone.isNotBlank() &&
+                    address.isNotBlank() &&
+                    detailAddress.isNotBlank() &&
+                    gender.isNotBlank() &&
+                    helpContent.isNotBlank()
 }
 
 enum class VisitorType(val label: String) {

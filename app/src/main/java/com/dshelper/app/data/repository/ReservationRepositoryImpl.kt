@@ -19,14 +19,12 @@ class ReservationRepositoryImpl @Inject constructor(
 
     override suspend fun postPersonalReservation(
         request: PersonalReservationRequest
-    ): Result<Unit> {  // ← 반환은 Result<Unit>
+    ): Result<Unit> {
         return runCatching {
             val response = reservationApi.postPersonalReservation(request)
-            // ↑ API에서 ReservationResponse 받아서
             if (!response.success) {
-                throw Exception(response.message)  // 실패면 예외 던짐
+                throw Exception(response.message)
             }
-            // 성공이면 Unit 반환 (runCatching이 Result<Unit>으로 감쌈)
         }
     }
 

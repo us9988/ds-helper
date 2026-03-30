@@ -5,9 +5,9 @@ data class User(
     val name: String,
     val email: String,
     val profileImage: String? = null,
-    val loginType: LoginType = LoginType.EMAIL
+    val loginType: LoginType
 )
 
 enum class LoginType {
-    EMAIL, KAKAO, NAVER, GOOGLE
+    KAKAO, NAVER, GOOGLE
 }

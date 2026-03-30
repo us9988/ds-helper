@@ -13,7 +13,6 @@ class LoginUseCase @Inject constructor(
             LoginType.KAKAO -> authRepository.loginWithKakao(accessToken)
             LoginType.NAVER -> authRepository.loginWithNaver(accessToken)
             LoginType.GOOGLE -> authRepository.loginWithGoogle(accessToken)
-            else -> Result.failure(Exception("지원하지 않는 로그인 방식"))
         }
     }
 }

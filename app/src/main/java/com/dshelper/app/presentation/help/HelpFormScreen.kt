@@ -153,8 +153,8 @@ fun HelpFormScreen(
 
 // TimeSelector 파라미터 수정
             TimeSelector(
-                startTime = uiState.startTime,      // ✅
-                endTime = uiState.endTime,          // ✅
+                startTime = uiState.startTime,
+                endTime = uiState.endTime,
                 maxSelectableTime = uiState.maxSelectableTime,
                 reservedTimes = uiState.reservedTimes,
                 isLoading = uiState.isTimesLoading,
@@ -188,7 +188,7 @@ fun HelpFormScreen(
                 value = uiState.address,
                 onValueChange = { viewModel.onEvent(HelpFormEvent.OnAddressChange(it)) },
                 placeholder = "주소 입력",
-                readOnly = true,  // 직접 입력 불가, 검색으로만 ✅
+                readOnly = true,
                 onClick = {
                     Log.d("AddressSearchActivity", "onClick called")
                     addressSearchLauncher.launch(
@@ -215,7 +215,6 @@ fun HelpFormScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 도움 요청 내용 ✅
             HelpFormTextField(
                 label = "도움 요청 내용",
                 value = uiState.helpContent,
@@ -550,8 +549,8 @@ private fun HelpFormTextField(
     onValueChange: (String) -> Unit,
     placeholder: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
-    readOnly: Boolean = false,         // 추가 ✅
-    onClick: (() -> Unit)? = null,     // 추가 ✅
+    readOnly: Boolean = false,
+    onClick: (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
     Column {
@@ -574,7 +573,7 @@ private fun HelpFormTextField(
                         )
                     }
                 },
-                readOnly = readOnly,  // ✅
+                readOnly = readOnly,
                 modifier = Modifier
                     .fillMaxWidth()
                     .then(

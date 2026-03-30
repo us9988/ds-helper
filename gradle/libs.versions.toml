@@ -16,9 +16,13 @@ room = "2.7.1"
 navigation = "2.7.7"
 coroutines = "1.8.0"
 ui = "1.10.4"
-kakao = "2.20.6"
 datastore = "1.1.1"
 coil = "2.7.0"
+
+kakao = "2.20.6"
+naver = "5.10.0"
+credential-manager = "1.3.0"
+google-id = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -63,6 +67,11 @@ androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 
 # KAKAO
 kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
+naver-oauth = { group = "com.navercorp.nid", name = "oauth", version.ref = "naver" }
+
+credential-manager = { group = "androidx.credentials", name = "credentials", version.ref = "credential-manager" }
+credential-manager-play = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credential-manager" }
+google-id = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "google-id" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 # libs.versions.toml - coil 있는지 확인

@@ -31,6 +31,9 @@ android {
         buildConfigField("String", "KAKAO_APP_KEY", "\"${localProperties["KAKAO_APP_KEY"]}\"")
         manifestPlaceholders["BASE_URL"] = localProperties["BASE_URL"].toString()
         buildConfigField("String", "BASE_URL", "\"${localProperties["BASE_URL"]}\"")
+        buildConfigField("String", "NAVER_CLIENT_ID", "\"${localProperties["NAVER_CLIENT_ID"]}\"")
+        buildConfigField("String", "NAVER_CLIENT_SECRET", "\"${localProperties["NAVER_CLIENT_SECRET"]}\"")
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties["GOOGLE_WEB_CLIENT_ID"]}\"")
     }
 
     buildTypes {
@@ -93,6 +96,12 @@ dependencies {
     implementation(libs.compose.material.icons.extended)
     // KAKAO
     implementation(libs.kakao.user)
+    // Naver
+    implementation(libs.naver.oauth)
+    implementation(libs.credential.manager)
+    implementation(libs.credential.manager.play)
+    implementation(libs.google.id)
+
     // DataStore
     implementation(libs.datastore.preferences)
     // coil

@@ -1,10 +1,10 @@
 package com.dshelper.app.data.api.dto
 
-data class  AuthResponse<T>(
+data class AuthResponse(
     val success: Boolean,
     val code: String,
     val message: String,
-    val data: T?
+    val data: TokenDto
 )
 
 data class UserDto(

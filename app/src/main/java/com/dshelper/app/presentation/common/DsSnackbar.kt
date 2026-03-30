@@ -38,7 +38,7 @@ private fun DsSnackbar(
         contentColor = Color.White,
         action = {
             IconButton(
-                onClick = { snackbarData.dismiss() }  // X 클릭 시 닫기 ✅
+                onClick = { snackbarData.dismiss() }
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,

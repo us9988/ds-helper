@@ -1,7 +1,5 @@
 package com.dshelper.app.presentation.auth.login
 
-import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,13 +36,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dshelper.app.BuildConfig
 import com.dshelper.app.R
 import com.dshelper.app.domain.model.LoginType
-import com.dshelper.app.presentation.common.DsTopBar
 import com.dshelper.app.presentation.common.DsSnackbarHost
+import com.dshelper.app.presentation.common.DsTopBar
 import com.dshelper.app.presentation.common.UserViewModel
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.user.UserApiClient
+import com.dshelper.app.presentation.theme.White
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -54,6 +54,7 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isLoggedIn by userViewModel.isLoggedIn.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
     LaunchedEffect(isLoggedIn) {
@@ -71,43 +72,37 @@ fun LoginScreen(
                 }
                 is LoginSideEffect.RequestSocialLogin -> {
                     when (effect.type) {
-                        LoginType.KAKAO -> {
-                            val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-                                when {
-                                    error != null -> {
-                                        Log.e("LOGIN", "카카오 SDK 에러: ${error.message}")
-                                        viewModel.onEvent(
-                                            LoginEvent.OnSocialLoginFailure(LoginType.KAKAO, error)
-                                        )
-                                    }
-                                    token != null -> {
-                                        Log.d("LOGIN", "카카오 SDK 성공: ${token.accessToken}")
-                                        viewModel.onEvent(
-                                            LoginEvent.OnSocialLoginSuccess(LoginType.KAKAO, token.accessToken)
-                                        )
-                                    }
-                                    else -> {
-                                        Log.e("LOGIN", "token, error 둘 다 null")
-
-                                    }
+                        LoginType.KAKAO -> handleKakaoLogin(
+                            context = context,
+                            onSuccess = { token ->
+                                viewModel.onEvent(LoginEvent.OnSocialLoginSuccess(LoginType.KAKAO, token))
+                            },
+                            onFailure = { error ->
+                                viewModel.onEvent(LoginEvent.OnSocialLoginFailure(LoginType.KAKAO, error))
+                            },
+                            onCancel = {}
+                        )
+                        LoginType.NAVER -> handleNaverLogin(
+                            context = context,
+                            onSuccess = { token ->
+                                viewModel.onEvent(LoginEvent.OnSocialLoginSuccess(LoginType.NAVER, token))
+                            },
+                            onFailure = { error ->
+                                viewModel.onEvent(LoginEvent.OnSocialLoginFailure(LoginType.NAVER, error))
+                            }
+                        )
+                        LoginType.GOOGLE -> scope.launch {
+                            handleGoogleLogin(
+                                context = context,
+                                webClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID,
+                                onSuccess = { token ->
+                                    viewModel.onEvent(LoginEvent.OnSocialLoginSuccess(LoginType.GOOGLE, token))
+                                },
+                                onFailure = { error ->
+                                    viewModel.onEvent(LoginEvent.OnSocialLoginFailure(LoginType.GOOGLE, error))
                                 }
-                            }
-                            if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
-                                Log.d("LOGIN", "카카오톡으로 로그인 시도")
-                                UserApiClient.instance.loginWithKakaoTalk(context as Activity, callback = callback)
-                            } else {
-                                Log.d("LOGIN", "카카오 계정으로 로그인 시도")
-                                Log.d("LOGIN", "context: ${context.javaClass.simpleName}")
-                                UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
-                                Log.d("LOGIN", "loginWithKakaoAccount 호출 완료")
-                            }
-
+                            )
                         }
-                        LoginType.NAVER -> { /* 추후 구현 */
-                        }
-                        LoginType.GOOGLE -> { /* 추후 구현 */
-                        }
-                        else -> {}
                     }
                 }
             }
@@ -115,6 +110,7 @@ fun LoginScreen(
     }
 
     Scaffold(
+        containerColor = White,
         snackbarHost = { DsSnackbarHost(snackbarHostState) },
         topBar = {
             DsTopBar(
@@ -173,10 +169,9 @@ fun LoginScreen(
                 iconSize = 24.dp,
                 onClick = { viewModel.onEvent(LoginEvent.OnOrganizationLoginClick) }
             )
-        }
-        if (uiState.isLoading) {
-            CircularProgressIndicator()
-//            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            if (uiState.isLoading) {
+                CircularProgressIndicator()
+            }
         }
     }
 }

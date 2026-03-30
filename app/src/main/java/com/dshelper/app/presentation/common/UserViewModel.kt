@@ -21,9 +21,7 @@ class UserViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             tokenDataStore.accessToken.collect { token ->
-                Log.d("LOGIN", "UserViewModel token 감지: $token")
                 _isLoggedIn.value = !token.isNullOrEmpty()
-                Log.d("LOGIN", "isLoggedIn: ${_isLoggedIn.value}")
             }
         }
     }

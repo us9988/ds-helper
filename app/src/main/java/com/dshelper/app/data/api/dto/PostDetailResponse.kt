@@ -1,6 +1,6 @@
 package com.dshelper.app.data.api.dto
 
-data class PostDetailDto(
+data class PostDetailResponse(
     val postId: String,
     val title: String,
     val content: String,

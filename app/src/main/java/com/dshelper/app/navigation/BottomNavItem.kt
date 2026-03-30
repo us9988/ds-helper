@@ -12,5 +12,5 @@ val bottomNavItems = listOf(
     BottomNavItem(Screen.Home, "홈", R.drawable.ic_home),
     BottomNavItem(Screen.Post, "활동", R.drawable.ic_post),
     BottomNavItem(Screen.Community, "소통", R.drawable.ic_community),
-    BottomNavItem(Screen.Profile, "마이", R.drawable.ic_profile)
+    BottomNavItem(Screen.MyPage, "마이", R.drawable.ic_my_page)
 )

@@ -1,7 +1,7 @@
 package com.dshelper.app.data.repository
 
 import com.dshelper.app.data.api.PostApi
-import com.dshelper.app.data.api.dto.PostDetailDto
+import com.dshelper.app.data.api.dto.PostDetailResponse
 import com.dshelper.app.data.api.dto.PostDto
 import com.dshelper.app.domain.model.Post
 import com.dshelper.app.domain.model.PostDetail
@@ -49,7 +49,7 @@ fun PostDto.toDomain() = Post(
     createdAt = createdAt
 )
 
-fun PostDetailDto.toDomain() = PostDetail(
+fun PostDetailResponse.toDomain() = PostDetail(
     id = postId,
     title = title,
     content = content,

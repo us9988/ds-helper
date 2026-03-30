@@ -17,6 +17,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -25,33 +26,35 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(
+    @Named("public")
+    fun providePublicOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+                else HttpLoggingInterceptor.Level.NONE
+            })
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("auth")
+    fun provideAuthOkHttpClient(
         tokenDataStore: TokenDataStore
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val token = runBlocking { tokenDataStore.accessToken.first() }
-                Log.d("NETWORK", "저장된 토큰 전체: $token")
-                Log.d("NETWORK", "토큰 앞 20자: ${token?.take(20)}")
                 val request = chain.request().newBuilder()
                     .apply {
                         if (!token.isNullOrEmpty()) {
-                            addHeader("Authorization", "Bearer $token")  // ✅ 토큰 추가
-                            Log.d("NETWORK", "Authorization 헤더: [Bearer $token]")
+                            addHeader("Authorization", "Bearer $token")
                         }
                     }
                     .build()
-                Log.d("NETWORK", "요청 URL: ${request.url}")
-                Log.d("NETWORK", "요청 헤더: ${request.headers}")
-                val response = chain.proceed(request)
-
-                Log.d("NETWORK", "응답 코드: ${response.code}")
-                if (response.code == 403) {
-                    val errorBody = response.peekBody(Long.MAX_VALUE).string()
-                    Log.e("NETWORK", "403 에러 바디: $errorBody")  // 403 원인 확인 ✅
-                }
-
-                response
+                chain.proceed(request)
             }
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
@@ -64,7 +67,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    @Named("public")
+    fun providePublicRetrofit(
+        @Named("public") okHttpClient: OkHttpClient
+    ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
@@ -74,19 +80,38 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthApi(retrofit: Retrofit): AuthApi {
+    @Named("auth")
+    fun provideAuthRetrofit(
+        @Named("auth") okHttpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(
+        @Named("auth") retrofit: Retrofit
+    ): AuthApi {
         return retrofit.create(AuthApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun providePostApi(retrofit: Retrofit): PostApi {
+    fun providePostApi(
+        @Named("public") retrofit: Retrofit
+    ): PostApi {
         return retrofit.create(PostApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideReservationApi(retrofit: Retrofit): ReservationApi {
+    fun provideReservationApi(
+        @Named("auth") retrofit: Retrofit  // ✅ 인증용
+    ): ReservationApi {
         return retrofit.create(ReservationApi::class.java)
     }
 }

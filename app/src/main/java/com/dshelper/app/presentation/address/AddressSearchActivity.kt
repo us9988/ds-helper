@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 
 class AddressSearchActivity : AppCompatActivity() {

@@ -1,6 +1,6 @@
 package com.dshelper.app.data.api
 
-import com.dshelper.app.data.api.dto.PostDetailDto
+import com.dshelper.app.data.api.dto.PostDetailResponse
 import com.dshelper.app.data.api.dto.PostListResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -18,6 +18,6 @@ interface PostApi {
     @GET("posts/{postId}")
     suspend fun getPostDetail(
         @Path("postId") postId: String
-    ): PostDetailDto
+    ): PostDetailResponse
 
 }

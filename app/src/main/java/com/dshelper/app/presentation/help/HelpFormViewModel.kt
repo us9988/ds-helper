@@ -28,8 +28,8 @@ class HelpFormViewModel @Inject constructor(
         run {
             val firstAvailable = findFirstAvailableDate()
             HelpFormUiState(
-                selectedYear = firstAvailable.year,    // 월 넘어가도 연도 맞춤 ✅
-                selectedMonth = firstAvailable.monthValue,  // 월 넘어가도 월 맞춤 ✅
+                selectedYear = firstAvailable.year,
+                selectedMonth = firstAvailable.monthValue,
                 selectedDay = firstAvailable.dayOfMonth
             )
         }
@@ -40,7 +40,6 @@ class HelpFormViewModel @Inject constructor(
     val sideEffect = _sideEffect.asSharedFlow()
 
     init {
-        // 초기 날짜로 예약된 시간 자동 조회
         loadReservedTimes()
     }
 
